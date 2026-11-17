@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # RANTERA — plateforme de sécurité routière (prototype expérimental)
 
 Détection d'accidents à partir de télémétrie véhicule, classification du type, estimation de la gravité
@@ -93,3 +94,6 @@ Voir `docs/RAPPORT_EVALUATION.md` (régénérable : `python -m rantera train && 
 ## Commandes utiles
 `python -m rantera train|evaluate|simulate|purge|serve` — `purge --days N` supprime les positions de plus de N jours et
 anonymise la position des incidents correspondants (protection des données de localisation).
+=======
+# RANTERA
+>>>>>>> 44483f300adb3b873adc67fdbf58572c75b9fa24
