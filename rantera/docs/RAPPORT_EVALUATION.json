@@ -1,0 +1,158 @@
+{
+  "seed": 7,
+  "n_per_scenario": 200,
+  "scenarios": {
+    "frontal": {
+      "n": 200,
+      "detected": 191,
+      "false_accident_alerts": 0,
+      "false_anomaly_events": 0,
+      "type_correct": 191
+    },
+    "lateral": {
+      "n": 200,
+      "detected": 194,
+      "false_accident_alerts": 0,
+      "false_anomaly_events": 0,
+      "type_correct": 194
+    },
+    "rear": {
+      "n": 200,
+      "detected": 195,
+      "false_accident_alerts": 0,
+      "false_anomaly_events": 0,
+      "type_correct": 195
+    },
+    "rollover": {
+      "n": 200,
+      "detected": 200,
+      "false_accident_alerts": 0,
+      "false_anomaly_events": 0,
+      "type_correct": 200
+    },
+    "cruise": {
+      "n": 200,
+      "detected": 0,
+      "false_accident_alerts": 0,
+      "false_anomaly_events": 0,
+      "type_correct": 0
+    },
+    "pothole": {
+      "n": 200,
+      "detected": 0,
+      "false_accident_alerts": 0,
+      "false_anomaly_events": 0,
+      "type_correct": 0
+    },
+    "hard_brake": {
+      "n": 200,
+      "detected": 200,
+      "false_accident_alerts": 0,
+      "false_anomaly_events": 0,
+      "type_correct": 0
+    }
+  },
+  "summary": {
+    "accident_recall": 0.975,
+    "false_accident_rate": 0.0,
+    "type_accuracy_when_detected": 1.0,
+    "hard_brake_recall": 1.0
+  },
+  "type_confusion": {
+    "collision_arriere": {
+      "collision_arriere": 195,
+      "collision_frontale": 0,
+      "collision_laterale": 0,
+      "tonneau": 0
+    },
+    "collision_frontale": {
+      "collision_arriere": 0,
+      "collision_frontale": 191,
+      "collision_laterale": 0,
+      "tonneau": 0
+    },
+    "collision_laterale": {
+      "collision_arriere": 0,
+      "collision_frontale": 0,
+      "collision_laterale": 194,
+      "tonneau": 0
+    },
+    "tonneau": {
+      "collision_arriere": 0,
+      "collision_frontale": 0,
+      "collision_laterale": 0,
+      "tonneau": 200
+    }
+  },
+  "severity": {
+    "rules": {
+      "accuracy": 0.7679,
+      "under_estimation": 0.0436,
+      "over_estimation": 0.1885,
+      "n": 780,
+      "confusion": {
+        "faible": {
+          "faible": 117,
+          "moyenne": 31,
+          "elevee": 0
+        },
+        "moyenne": {
+          "faible": 13,
+          "moyenne": 204,
+          "elevee": 116
+        },
+        "elevee": {
+          "faible": 0,
+          "moyenne": 21,
+          "elevee": 278
+        }
+      }
+    },
+    "ml": {
+      "accuracy": 0.8372,
+      "under_estimation": 0.0872,
+      "over_estimation": 0.0756,
+      "n": 780,
+      "confusion": {
+        "faible": {
+          "faible": 126,
+          "moyenne": 22,
+          "elevee": 0
+        },
+        "moyenne": {
+          "faible": 18,
+          "moyenne": 278,
+          "elevee": 37
+        },
+        "elevee": {
+          "faible": 0,
+          "moyenne": 50,
+          "elevee": 249
+        }
+      }
+    },
+    "hybrid": {
+      "accuracy": 0.7692,
+      "under_estimation": 0.041,
+      "over_estimation": 0.1897,
+      "n": 780,
+      "confusion": {
+        "faible": {
+          "faible": 117,
+          "moyenne": 31,
+          "elevee": 0
+        },
+        "moyenne": {
+          "faible": 12,
+          "moyenne": 204,
+          "elevee": 117
+        },
+        "elevee": {
+          "faible": 0,
+          "moyenne": 20,
+          "elevee": 279
+        }
+      }
+    }
+  }
+}

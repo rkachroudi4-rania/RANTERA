@@ -1,0 +1,6 @@
+{
+  "api_url": "http://127.0.0.1:8000",
+  "api_key": "rantera-dev-key",
+  "vehicle_id": "GODOT-001",
+  "source": "simulated"
+}

@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RANTERA — Supervision</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<header class="top">
+  <div class="brand"><span class="mark" aria-hidden="true"></span>RANTERA</div>
+  <nav id="nav" aria-label="Vues">
+    <button data-view="live" class="on">Supervision</button>
+    <button data-view="history">Historique</button>
+    <button data-view="analysis">Analyse</button>
+    <button data-view="alerts">Alertes</button>
+  </nav>
+  <div class="top-right">
+    <span id="conn" class="pill" title="Connexion à l'API">…</span>
+    <button id="btn-sim" class="btn">Simuler un accident</button>
+    <button id="btn-key" class="btn ghost" title="Clé API">Clé API</button>
+  </div>
+</header>
+<div id="banner" class="banner" hidden></div>
+
+<main>
+  <section id="view-live" class="view">
+    <div class="kpis" id="kpis"></div>
+    <div class="live-grid">
+      <div class="card map-card"><div id="map" class="map"></div><div id="map-note" class="map-note"></div></div>
+      <div class="card feed-card">
+        <h2>Derniers incidents</h2>
+        <ul id="feed" class="feed"></ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="view-history" class="view" hidden>
+    <form id="filters" class="card filters">
+      <label>Du <input type="date" name="date_from"></label>
+      <label>Au <input type="date" name="date_to"></label>
+      <label>Type
+        <select name="type"><option value="">Tous</option>
+          <option value="collision_frontale">Collision frontale</option><option value="collision_laterale">Collision latérale</option>
+          <option value="collision_arriere">Collision arrière</option><option value="tonneau">Tonneau</option>
+          <option value="freinage_brutal">Freinage brutal</option></select></label>
+      <label>Gravité
+        <select name="severity"><option value="">Toutes</option><option value="faible">Faible</option>
+          <option value="moyenne">Moyenne</option><option value="elevee">Élevée</option></select></label>
+      <label>Statut
+        <select name="status"><option value="">Tous</option><option value="nouveau">Nouveau</option>
+          <option value="en_cours">En cours</option><option value="traite">Traité</option><option value="faux_positif">Faux positif</option></select></label>
+      <label>Origine
+        <select name="source"><option value="">Toutes</option><option value="real">Réelle</option><option value="simulated">Simulée</option></select></label>
+      <button class="btn" type="submit">Filtrer</button>
+      <button class="btn ghost" type="reset" id="f-reset">Réinitialiser</button>
+      <button class="btn ghost" type="button" id="btn-export">Exporter en CSV</button>
+    </form>
+    <div class="card table-card">
+      <table class="tbl" id="hist-table">
+        <thead><tr><th>Date (UTC)</th><th>Véhicule</th><th>Type</th><th>Gravité</th><th>Statut</th><th>Origine</th><th>Position</th></tr></thead>
+        <tbody></tbody>
+      </table>
+      <div class="pager"><button class="btn ghost" id="pg-prev">Précédent</button><span id="pg-info"></span><button class="btn ghost" id="pg-next">Suivant</button></div>
+    </div>
+  </section>
+
+  <section id="view-analysis" class="view" hidden>
+    <div class="chart-grid">
+      <div class="card"><h2>Accidents par gravité</h2><canvas id="ch-sev" width="520" height="220"></canvas></div>
+      <div class="card"><h2>Incidents par type</h2><canvas id="ch-type" width="520" height="220"></canvas></div>
+      <div class="card"><h2>Incidents par jour</h2><canvas id="ch-day" width="520" height="220"></canvas></div>
+      <div class="card"><h2>Incidents par heure (UTC)</h2><canvas id="ch-hour" width="520" height="220"></canvas></div>
+    </div>
+    <div class="two-col">
+      <div class="card"><h2>Zones à risque</h2>
+        <p class="hint">Cellules d'environ 1 km regroupant les accidents géolocalisés, classées par gravité cumulée.</p>
+        <ol id="hotspots" class="hotspots"></ol></div>
+      <div class="card"><h2>Données pour analyses prédictives</h2>
+        <p class="hint">Export des caractéristiques physiques de chaque accident (ΔV, pic d'accélération, roulis…) avec la gravité estimée.</p>
+        <button class="btn" id="btn-export-feat">Télécharger features.csv</button>
+        <h2 class="sub">Modèle de gravité</h2><div id="model-info" class="hint"></div></div>
+    </div>
+  </section>
+
+  <section id="view-alerts" class="view" hidden>
+    <div class="card table-card">
+      <p class="hint pad">Les alertes non livrées restent en file et sont renvoyées automatiquement avec un délai croissant. Aucune n'est supprimée.</p>
+      <table class="tbl" id="alert-table">
+        <thead><tr><th>Alerte</th><th>Créée (UTC)</th><th>Type</th><th>Gravité</th><th>Statut</th><th>Tentatives</th><th>Dernière erreur</th><th></th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+</main>
+
+<aside id="detail" class="detail" hidden aria-label="Détail de l'incident"></aside>
+<div id="toasts" class="toasts" aria-live="polite"></div>
+
+<dialog id="dlg-key"><form method="dialog" class="dlg">
+  <h2>Clé API</h2>
+  <p class="hint">Saisissez la clé définie par <code>RANTERA_API_KEY</code> (par défaut en local : <code>rantera-dev-key</code>). Elle reste dans cet onglet.</p>
+  <input id="in-key" type="password" autocomplete="off" aria-label="Clé API">
+  <div class="dlg-actions"><button class="btn" value="ok">Enregistrer</button></div></form></dialog>
+
+<dialog id="dlg-sim"><form method="dialog" class="dlg">
+  <h2>Simuler un événement</h2>
+  <p class="hint">Génère des mesures synthétiques et les envoie dans la chaîne de détection réelle. L'incident créé est marqué « simulé ».</p>
+  <label>Scénario <select id="sim-scenario">
+    <option value="frontal">Collision frontale</option><option value="lateral">Collision latérale</option>
+    <option value="rear">Collision arrière</option><option value="rollover">Tonneau</option>
+    <option value="hard_brake">Freinage brutal (sans choc)</option><option value="pothole">Nid-de-poule (aucun incident attendu)</option></select></label>
+  <label class="chk"><input type="checkbox" id="sim-gps"> Perte du signal GPS avant l'impact</label>
+  <div class="dlg-actions"><button class="btn ghost" value="cancel">Annuler</button><button class="btn" value="go" id="sim-go">Lancer</button></div></form></dialog>
+
+<script src="/static/app.js"></script>
+</body>
+</html>
